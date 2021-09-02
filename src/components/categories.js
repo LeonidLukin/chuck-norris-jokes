@@ -1,4 +1,8 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import Quote from './Quote'
+
+import "../components/styles/Categories.css"
+import "../components/styles/QouteS.css"
 
 const getResourse = async (url) => {
     const response = await fetch(url);
@@ -8,21 +12,45 @@ const getResourse = async (url) => {
     return await response.json()
 };
 
-    // 0. create new state with hook quote, setQuote
-    // 1. Event listener
-    // 2. OnClick handler
-    // 3. Inside onclick gtResource
-    // 4. render quote with text
-
-function Categories () {
+function Categories (props) {
     const [categories, setCategories] = useState([]);
-    getResourse('https://api.chucknorris.io/jokes/categories').then(data => {
-        setCategories(data);
-    });
+    const [quote, setQuote] = useState();
+
+    useEffect(() => {
+        getResourse('https://api.chucknorris.io/jokes/categories').then(data => {
+            setCategories(data);
+        });
+        getResourse('https://api.chucknorris.io/jokes/random').then(data => {
+            setQuote(data.value);
+        });
+    }, []);
+    
+    
+    const onCategoryClick = (categoryName) => {
+        const url = categoryName === 'random' ? 'https://api.chucknorris.io/jokes/random' : `https://api.chucknorris.io/jokes/random?category=${categoryName}`
+
+        getResourse(url).then(data => {
+            setQuote(data.value);
+        });
+    }
 
     return(
-    <div >
-        {categories.map((cat, idx) => <button type="button" key={idx}>{cat}</button>)}
+    <div className="categories">
+        <h1 className="categories__title">Categories</h1>
+        <ul className="categories__box">
+            {categories.map((category, index, array) => 
+            <li key={index}>
+                <button className="categories__box-item" type="button" onClick={ () => onCategoryClick(category) }>{category}</button>
+            </li>)
+            }
+            <li>
+                <button className="categories__box-item" type="button" onClick={ () => onCategoryClick('random') }>random</button>
+            </li>
+        </ul>
+        <div className="quote__box">
+            <Quote data={quote} />
+        </div>
+        
     </div>
     )
 }
