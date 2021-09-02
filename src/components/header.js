@@ -1,17 +1,6 @@
 import React, {useState, useEffect} from "react"
 import "../components/styles/Header.css"
 
-// import ".App.css"
-// const getResourse = async (url) => {
-//     const response = await fetch(url);
-//     if(!response.ok) {
-//         throw new Error(`Ошибка по адресу ${url}, статус ошибки ${response.status}`);
-//     }
-//     return await response.json()
-    
-// };
-// getResourse('https://api.chucknorris.io/jokes/random').then(data => console.log(data))
-
 const getResourse = async (url) => {
     const response = await fetch(url);
     if(!response.ok) {
